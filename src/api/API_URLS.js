@@ -4,8 +4,8 @@
 // LOCAL
 
 // PROD
-export const MICROSERVICE = 'https://website.com:3006'
-export const PHONE_MICROSERVICE = 'http://localhost:9999'
+// export const MICROSERVICE = 'https://website.com:3006'
+export const PHONE_MICROSERVICE = 'http://rentheros.com:8888'
 
 //
 // // STAGING
