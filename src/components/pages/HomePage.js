@@ -24,7 +24,19 @@ class HomePage extends Component {
 			muted: false,
 			onPhone: false,
 
-			log: ''
+			log: '',
+
+			password: '',
+			passed: false,
+		}
+	}
+
+	componentWillMount() {
+		const passed = localStorage.getItem('passed')
+		if (passed) {
+			this.setState({
+				passed: true,
+			})
 		}
 	}
 
@@ -35,7 +47,7 @@ class HomePage extends Component {
     // Fetch Twilio capability token from our Node.js server
     getToken()
 			.then((data) => {
-				console.log(data)
+				// console.log(data)
 				Twilio.Device.setup(data.token)
 				// console.log(device)
 			})
@@ -84,7 +96,40 @@ class HomePage extends Component {
 			// hang up call in progress
 			Twilio.Device.disconnectAll()
 		}
+	}
 
+	checkPassword(password) {
+		if (password === 'meinvzainaer') {
+			this.setState({
+				passed: true,
+			})
+			localStorage.setItem('passed', true)
+		} else {
+			message.warning('Incorrect Password')
+			this.setState({
+				password: ''
+			})
+		}
+	}
+
+	renderPassword() {
+		return (
+			<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-around'}}>
+				<div style={{ color: 'white' }}>Please Enter Password</div>
+				<br />
+				<Input
+					value={this.state.password}
+					onChange={e => this.setState({ password: e.target.value })}
+					placeholder='Password...'
+					onPressEnter={() => this.checkPassword(this.state.password)}
+					type='password'
+				/>
+				<br /><br />
+				<Button type='default' onClick={() => this.checkPassword(this.state.password)}>
+					ENTER
+				</Button>
+			</div>
+		)
 	}
 
 
@@ -94,16 +139,26 @@ class HomePage extends Component {
 				<div style={comStyles().dialerBox}>
 					<div style={comStyles().font_logo}>RentHero</div>
 					<div style={comStyles().dianhua}>电话</div>
-					<Input
-						value={this.state.number}
-						onChange={e => this.setState({ number: e.target.value })}
-						placeholder='Dial Number'
-						style={{ borderRadius: '25px', marginBottom: '80px', textAlign: 'center' }}
-						size='large'
-					/>
-					<Button shape='circle' icon='phone' onClick={() => this.initiateCall()} style={this.state.onPhone ? { background: 'red', color: 'white', border: 'none', height: '75px', width: '75px', fontSize: '2rem', } : { background: 'lightgreen', color: 'white', border: 'none', height: '75px', width: '75px', fontSize: '2rem', }} >
 
-					</Button>
+					{
+						this.state.passed
+						?
+						<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', }}>
+							<Input
+								value={this.state.number}
+								onChange={e => this.setState({ number: e.target.value })}
+								placeholder='Dial Number'
+								style={{ borderRadius: '25px', marginBottom: '80px', textAlign: 'center' }}
+								size='large'
+							/>
+							<Button shape='circle' icon='phone' onClick={() => this.initiateCall()} style={this.state.onPhone ? { background: 'red', color: 'white', border: 'none', height: '75px', width: '75px', fontSize: '2rem', } : { background: 'lightgreen', color: 'white', border: 'none', height: '75px', width: '75px', fontSize: '2rem', }} >
+
+							</Button>
+						</div>
+						:
+						this.renderPassword()
+					}
+
 				</div>
 			</div>
 		)
