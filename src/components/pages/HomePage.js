@@ -137,8 +137,9 @@ class HomePage extends Component {
 		return (
 			<div id='HomePage' style={comStyles().container}>
 				<div style={comStyles().dialerBox}>
-					<div style={comStyles().font_logo}>RentHero</div>
-					<div style={comStyles().dianhua}>电话</div>
+					<div style={comStyles().font_logo}>电话</div>
+					<div style={{ color: 'white', }}>Powered By</div>
+					<div style={comStyles().dianhua}>RentHero</div>
 
 					{
 						this.state.passed
